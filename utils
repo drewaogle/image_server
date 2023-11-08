@@ -1,0 +1,22 @@
+# utils
+
+die() {
+    printf "$1\n"
+    exit 1
+}
+
+has_file() {
+    if [ -e "$1" ]; then
+        if [ ! -r "$1" ]; then
+            die "$1 exists but isn't readable"
+        fi
+        echo "has_file: readable $1"
+        return 0
+    fi
+    echo "has_file: no file $1"
+    return 1
+}
+
+create_images() {
+    python3 createImages.py -o "$1" -c $2 -s $3
+}

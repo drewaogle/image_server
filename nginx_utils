@@ -1,0 +1,12 @@
+# nginx utils
+
+has_nginx() {
+    which nginx >/dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "No NGINX in path"
+        return 1
+    fi
+    return 0
+}
+
+
