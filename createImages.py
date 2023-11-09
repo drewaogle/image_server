@@ -92,10 +92,10 @@ def generate(opts):
         # choose color based on hash output
         bg_color = tuple(random.randint(0, 255) for _ in range(3))
         fg_color = complementary_color(bg_color)
-        canvas = Image.new("RGBA", opts.image_dimensions.size(), bg_color)
-        d = ImageDraw.Draw(canvas)
-        d.text((10, 10), text, font=fnt, fill=fg_color)
-        canvas.save(output_file, 'png')
+        with Image.new("RGBA", opts.image_dimensions.size(), bg_color) as canvas:
+            d = ImageDraw.Draw(canvas)
+            d.text((10, 10), text, font=fnt, fill=fg_color)
+            canvas.save(output_file, 'png')
         bar.update(i)
 
 if __name__ == '__main__':

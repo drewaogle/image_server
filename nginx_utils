@@ -10,15 +10,17 @@ has_nginx() {
 }
 
 run_nginx_http() {
+    docker container rm imageserver-http
     docker run --name imageserver-http \
     -p $1:80 \
     -v $2:/usr/share/nginx/html:ro \
     -v $(pwd)/nginx:/etc/nginx \
-    -v $(pwd)/conf/http:/etc/nginx/sites-enabled \
+    -v $(pwd)/conf/$3:/etc/nginx/sites-enabled \
     nginx:1.25-alpine-slim 
 }
 
 run_nginx_https() {
+    docker container rm imageserver-https
     docker run --name imageserver-https \
     -p $1:443 \
     -v $2:/usr/share/nginx/html:ro \

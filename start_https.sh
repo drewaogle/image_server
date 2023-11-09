@@ -18,5 +18,5 @@ fi
 if  ! has_file "images/1.png" ;  then
     create_images "$(pwd)/images" 1000 "1024x768"
 fi
-
-run_nginx_https 8443 "$(pwd)/images"
+# port http_root config
+run_nginx_https 8443 "$(pwd)/images" "https"
