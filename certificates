@@ -9,3 +9,41 @@ make_self_signed_cert() {
     -subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=localhost/emailAddress=engineering@aperturedata.io"
     #-subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=aperturedb.local/emailAddress=engineering@aperturedata.io"
 }
+
+make_ca() {
+    mkdir -p "ca"
+    cd "ca"
+    # add -aes256 to encrypt key
+    # key for ca.
+    openssl genrsa -out miniAD_CA.key 2048
+    # certificate
+    DAYS=$(( 256 * 10 ))
+    openssl req -x509 -new -nodes -key miniAD_CA.key -sha256 -days "${DAYS}" -out miniAD.pem \
+    -subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=Aperture Certs/emailAddress=engineering@aperturedata.io"
+}
+
+make_ca_signed_cert() {
+    mkdir -p $(dirname $1)
+    # generate private key
+    openssl genrsa -out "$2" 2048
+    # generate csr
+    openssl req -new -key "$2" -out "$3" \
+    -subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=localhost/emailAddress=engineering@aperturedata.io"
+
+    # generate extensions file
+cat > "$4" << EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+EOF
+    # generate pem
+    openssl x509 -req -in "$3" -CA "ca/miniAD.pem" -CAkey "ca/miniAD_CA.key" \
+      -CAcreateserial -out "$1" -days 365 -sha256 -extfile "$4"
+    
+    
+}
+

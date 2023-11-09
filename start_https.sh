@@ -5,9 +5,14 @@
 
 has_nginx || die "No NGINX"
 
+if ! has_file 'ca/miniAD.pem' ; then
+  make_ca
+fi
+
 if ! has_file 'certs/http.key' || ! has_file 'certs/http.crt' ; then
     echo "Need to create key and cert"
-    make_self_signed_cert "certs/http.crt" "certs/http.key"   
+    #make_self_signed_cert "certs/http.crt" "certs/http.key"   
+    make_ca_signed_cert "certs/http.crt" "certs/http.key"  "certs/http.csr" "certs/http.ext"
 fi
 
 if  ! has_file "images/1.png" ;  then
