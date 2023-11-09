@@ -9,4 +9,21 @@ has_nginx() {
     return 0
 }
 
+run_nginx_http() {
+    docker run --name imageserver-http \
+    -p $1:80 \
+    -v $2:/usr/share/nginx/html:ro \
+    -v $(pwd)/nginx:/etc/nginx \
+    -v $(pwd)/conf/http:/etc/nginx/sites-enabled \
+    nginx:1.25-alpine-slim 
+}
 
+run_nginx_https() {
+    docker run --name imageserver-https \
+    -p $1:443 \
+    -v $2:/usr/share/nginx/html:ro \
+    -v $(pwd)/nginx:/etc/nginx \
+    -v $(pwd)/conf/https:/etc/nginx/sites-enabled \
+    -v $(pwd)/certs/:/etc/ssl \
+    nginx:1.25-alpine-slim 
+}

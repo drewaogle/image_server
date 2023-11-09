@@ -10,7 +10,8 @@ if ! has_file 'certs/http.key' || ! has_file 'certs/http.crt' ; then
     make_self_signed_cert "certs/http.crt" "certs/http.key"   
 fi
 
-if  ! has_file "images/1.jpg" ;  then
-    create_images "./images" 1000 "1024x768"
-    #create_images "./images" 1000 "640x480"
+if  ! has_file "images/1.png" ;  then
+    create_images "$(pwd)/images" 1000 "1024x768"
 fi
+
+run_nginx_https 8443 "$(pwd)/images"
