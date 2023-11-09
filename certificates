@@ -3,7 +3,9 @@
 
 # outputs cert to $1, key to $2
 make_self_signed_cert() {
+    # CN is how cert will be checked for hostname.
     mkdir -p $(dirname $1)
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout "$2" -out "$1" \
-    -subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=aperturedb.local/emailAddress=engineering@aperturedata.io"
+    -subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=localhost/emailAddress=engineering@aperturedata.io"
+    #-subj "/C=US/ST=CA/L=Los Gatos/O=ApertureData/OU=Engineering/CN=aperturedb.local/emailAddress=engineering@aperturedata.io"
 }
